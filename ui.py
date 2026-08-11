@@ -1,12 +1,62 @@
 from tkinter import *
 
-
+import quiz_brain
+from quiz_brain import QuizBrain
 
 THEME_COLOR = "#FFE8B0"
 
 class QuizInterface:
 
-    def __init__(self):
+    def get_next_question(self):
+        quiz_txt = self.quiz.next_question()
+        return quiz_txt
+
+    def start_quiz(self):
+        self.canvas.delete("all")
+        self.question_box_img = PhotoImage(file="quiz-images/ui/question_box.png")
+        self.canvas.create_image(400, 200, image=self.question_box_img)
+        quiz_txt = self.get_next_question()
+        self.canvas.create_text(400,200,text=quiz_txt, width=350,justify="center",font=("Chewy", 16))
+
+        self.true_option_img = PhotoImage(file="quiz-images/option_buttons/option_pink.png")
+        self.true_button = Button(
+            self.canvas,
+            image=self.true_option_img,
+            text="True",
+            compound="center",
+            font=("Chewy", 16),
+            fg="black",
+            bg=THEME_COLOR,
+            activebackground=THEME_COLOR,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: self.quiz.check_answer("True")
+        )
+        self.canvas.create_window(300, 400, window=self.true_button)
+
+        self.false_option_img = PhotoImage(file="quiz-images/option_buttons/option_blue.png")
+        self.false_button = Button(
+            self.canvas,
+            image=self.false_option_img,
+            text="False",
+            compound="center",
+            font=("Chewy", 16),
+            fg="black",
+            bg=THEME_COLOR,
+            activebackground=THEME_COLOR,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: self.quiz.check_answer("False")
+        )
+        self.canvas.create_window(500, 400, window=self.false_button)
+        self.canvas.create_text(500, 400, text="False", font=("Chewy", 16), fill="black")
+
+
+
+    def __init__(self,quiz_brain: QuizBrain):
+
+
+        self.quiz=quiz_brain
         self.window=Tk()
         self.window.title("Wishy_Washy Quiz")
 
@@ -52,6 +102,8 @@ class QuizInterface:
 
         self.start_button_img = PhotoImage(file="quiz-images/buttons/start_button.png")
         self.canvas.create_image(620, 420, image=self.start_button_img)
+        self.start_button = Button(self.canvas,image=self.start_button_img,bg=THEME_COLOR,activebackground=THEME_COLOR,borderwidth=0,highlightthickness=0,command=self.start_quiz)
+        self.canvas.create_window(620, 420, window=self.start_button)
 
         self.sparkle_01_img = PhotoImage(file="quiz-images/decorations/sparkle_large_01.png")
         self.sparkle_02_img = PhotoImage(file="quiz-images/decorations/sparkle_large_02.png")
@@ -59,14 +111,13 @@ class QuizInterface:
         self.canvas.create_image(500, 200, image=self.sparkle_01_img)
         self.canvas.create_image(50, 300, image=self.sparkle_02_img)
 
-        self.dash_img = PhotoImage(file="quiz-images/decorations/yellow_dash_01.png")
-        self.canvas.create_image(950, 700, image=self.dash_img)
-        self.canvas.create_image(1000, 950, image=self.dash_img)
-
         self.canvas.create_text(395, 200,text="Oh, Charlie!!", font=("Comic Sans MS", 20, "italic"),fill="black")
+
+
 
         self.window.mainloop()
 
 
-if __name__ == "__main__":
-    QuizInterface()
+
+
+
